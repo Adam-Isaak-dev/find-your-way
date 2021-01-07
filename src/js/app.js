@@ -9,8 +9,6 @@ class Planner {
     return fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${search}.json?bbox=${this.border}&limit=10&access_token=${this.mapKey}&types=address,poi,neighborhood`)
     .then(response => response.json())
     .then((data) => {
-      console.log(data);
-      
       if(data.features.length > 0) {
         for (const spot of data.features) {
           this.insertLocation(element, this.locationDataHandler(spot));
@@ -21,15 +19,13 @@ class Planner {
     })
   }
 
-  getRoute(startLon, startLat, endLon, endLat) {
+  getRoute(element, startLon, startLat, endLon, endLat) {
     return fetch(`https://api.winnipegtransit.com/v3/trip-planner.json?origin=geo/${startLat},${startLon}&destination=geo/${endLat},${endLon}&api-key=${this.busKey}`)
     .then(response => response.json())
     .then((data) => {
-      console.log(data);
-
       if(data.plans.length > 0) {
-        for (const section of route) {
-          this.insertSection(element, this.sectionDataHandler());
+        for (const section of data.plans[0].segments) {
+          this.insertSection(element, this.sectionDataHandler(section));
         }
       } else {
         element.insertAdjacentHTML("beforeend", ` <h4>No plans available</h4>`);
@@ -50,24 +46,22 @@ class Planner {
   }
 
   sectionDataHandler(data) {
-    const route = data.plans[0].segments;
-    const time = section.duration.total;
-    const from =  section.from.stop ? `#${section.from.stop.key} - ${section.from.stop.name}` : `from your starting location`;
-    const to = section.to.stop ? `#${section.to.stop.key} - ${section.to.stop.name}` : `your destination`;
+    console.log("ran");
+    const time = data.times.durations.total;
 
     const sectionData = {}
-    switch(section.type) {
+    switch(data.type) {
       case "walk":
         sectionData.icon = "fa-walking";
-        sectionData.text = `Walk for ${time} minutes to stop ${to}`
+        sectionData.text = `Walk for ${time} minutes to ${data.to.stop ? `stop #${data.to.stop.key} - ${data.to.stop.name}` : `your destination`}`
         break;
       case "transfer":
         sectionData.icon = "fa-ticket-alt";
-        sectionData.text = `Transfer from stop ${from} to stop ${to}` 
+        sectionData.text = `Transfer from stop ${data.from.stop ? `#${data.from.stop.key} - ${data.from.stop.name}` : `your starting location`} to stop ${data.to.stop ? `#${data.to.stop.key} - ${data.to.stop.name}` : `your destination`}` 
         break;
       case "ride":
         sectionData.icon = "fa-bus";
-        sectionData.text = `Ride the Route ${section.route.number} for ${time}`
+        sectionData.text = `Ride the Route ${data.route.number} for ${time} minutes`
         break;
     }
 
@@ -92,3 +86,63 @@ class Planner {
 
 const planner = new Planner();
 
+const origins = document.querySelector(".origins");
+const originForm = document.querySelector(".origin-form");
+const destinations = document.querySelector(".destinations");
+const destinationForm = document.querySelector(".destination-form");
+const trip = document.querySelector(".my-trip");
+const planTrip = document.querySelector(".plan-trip");
+
+originForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  origins.innerHTML = "";
+  planner.getLocation(originForm.querySelector("input").value, origins);
+});
+
+origins.addEventListener("click", function(e) {
+  if(e.target.tagName === "UL") {
+    return;
+  }
+
+  if (origins.querySelector(".selected")) {
+    origins.querySelector(".selected").classList.remove("selected");
+  }
+
+  e.target.closest("li").classList.add("selected");
+});
+
+
+destinationForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  destinations.innerHTML = "";
+  planner.getLocation(destinationForm.querySelector("input").value, destinations);
+});
+
+destinations.addEventListener("click", function(e) {
+  if(e.target.tagName === "UL") {
+    return;
+  }
+
+  if (destinations.querySelector(".selected")) {
+    destinations.querySelector(".selected").classList.remove("selected");
+  }
+
+  e.target.closest("li").classList.add("selected");
+});
+
+planTrip.addEventListener("click", function() {
+  trip.innerHTML = "";
+
+  if(!origins.querySelector(".selected")) {
+    trip.insertAdjacentHTML("beforeend", `No starting point selected...`);
+  } else if(!destinations.querySelector(".selected")) {
+    trip.insertAdjacentHTML("beforeend", `No destination selected...`);
+  } else {
+    const start = origins.querySelector(".selected");
+    const end = destinations.querySelector(".selected");
+
+    planner.getRoute(trip, start.dataset.lon, start.dataset.lat, end.dataset.lon, end.dataset.lat);
+  }
+});
