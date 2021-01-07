@@ -1,5 +1,18 @@
-# find-your-way
+# Find Your Way
 A trip planning application for Winnipeg, Manitoba
+
+## Project Notes
+### Process
+1. Set up the fetch and data manipulation of forward geocoding
+2. Display results onto the HTML
+3. Edge case handling with forward geocoding
+4. Set up the route fetch and data manipulation.
+5. Add the user selection process.
+6. Edge case handling of route selecting.
+7. Display resulting route to user on the HTML
+
+Optional: Update gulpfile
+
 
 ## SD105 Final Project
 This is an individual project. Complete and submit your own work.
