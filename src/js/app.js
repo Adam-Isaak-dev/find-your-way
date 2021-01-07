@@ -28,9 +28,12 @@ class Planner {
           this.insertSection(element, this.sectionDataHandler(section));
         }
       } else {
-        element.insertAdjacentHTML("beforeend", ` <h4>No plans available</h4>`);
+        element.insertAdjacentHTML("beforeend", ` <h4>No trip plans available</h4>`);
       }
-    });
+    })
+    .catch(function() {
+      element.insertAdjacentHTML("beforeend", ` <h4>No trip plans available</h4>`);
+    })
   }
 
   locationDataHandler(data) {
@@ -46,7 +49,6 @@ class Planner {
   }
 
   sectionDataHandler(data) {
-    console.log("ran");
     const time = data.times.durations.total;
 
     const sectionData = {}
@@ -143,6 +145,10 @@ planTrip.addEventListener("click", function() {
     const start = origins.querySelector(".selected");
     const end = destinations.querySelector(".selected");
 
-    planner.getRoute(trip, start.dataset.lon, start.dataset.lat, end.dataset.lon, end.dataset.lat);
+    if (start.dataset.lon === end.dataset.lon && start.dataset.lat === end.dataset.lat) {
+      trip.insertAdjacentHTML("beforeend",  "<h3>Cannot plan for matching starting location and destination</h3>")
+    } else {
+      planner.getRoute(trip, start.dataset.lon, start.dataset.lat, end.dataset.lon, end.dataset.lat);
+    }
   }
 });
