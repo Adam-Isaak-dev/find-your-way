@@ -2,17 +2,7 @@
 A trip planning application for Winnipeg, Manitoba
 
 ## Project Notes
-### Process
-1. Set up the fetch and data manipulation of forward geocoding
-2. Display results onto the HTML
-3. Edge case handling with forward geocoding
-4. Set up the route fetch and data manipulation.
-5. Add the user selection process.
-6. Edge case handling of route selecting.
-7. Display resulting route to user on the HTML
-
-Optional: Update gulpfile
-
+URL: https://adam-find-your-way.netlify.app
 
 ## SD105 Final Project
 This is an individual project. Complete and submit your own work.
@@ -61,7 +51,7 @@ Pay attention to the details! For example, notice that the first word of each se
 
 #### **TIPS**
 * There are many little pieces to this project but nothing exceptionally difficult. Plan ahead and split the problem into small parts.
-* Don't get stuck on one thing for too long, get something working even if it doesn't necessarily contain everything required. It is much better to submit something * incomplete but working than 'complete' but not working at all.
+* Don't get stuck on one thing for too long, get something working even if it doesn't necessarily contain everything required. It is much better to submit something incomplete but working than 'complete' but not working at all.
 * You have a lot of time, but don't wait too long to start. This project can be deceptively difficult.
 * Functions are your friends. Your code may get out of control and very difficult for you to manage if you don't use them effectively.
 * Pay attention to your console. Handle ALL errors and warnings, even if they pre-exist in the provided starter files.
@@ -71,7 +61,6 @@ Edge cases are scenarios where your app is used differently than intended. It's 
 
 You are required to handle at least the following edge cases, including providing feedback to the user (no browser alerts!):
 
-* User location not accessible (can you turn off location services in your browser to test this?)
 * No search result in either the origin or destination
 * Clicking the plan my trip button with incomplete origin and/or destination fields
 * Clicking the plan my trip button when origin and destination are the same
