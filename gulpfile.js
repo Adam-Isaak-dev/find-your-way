@@ -22,7 +22,7 @@ function cssTask() {
   return src('src/css/*.css')
     .pipe(sourcemaps.init())
     .pipe(postcss([ autoprefixer(), cssnano() ]))
-    .pipe(concat('all.css'))
+    .pipe(concat('style.css'))
     .pipe(sourcemaps.write())
     .pipe(dest('dist/css'))
 }
@@ -31,7 +31,7 @@ function jsTask() {
   return src('src/js/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
-    .pipe(concat('all.js'))
+    .pipe(concat('app.js'))
     .pipe(sourcemaps.write())
     .pipe(dest('dist/js'))
 }
