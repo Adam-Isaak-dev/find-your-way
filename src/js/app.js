@@ -11,7 +11,7 @@ class Planner {
     .then((data) => {
       if(data.features.length > 0) {
         for (const spot of data.features) {
-          this.insertLocation(element, this.locationDataHandler(spot));
+          this.checkIfExists(element, this.locationDataHandler(spot));
         }
       } else {
         element.insertAdjacentHTML("beforeend", ` <h4>No results found...</h4>`);
@@ -33,6 +33,16 @@ class Planner {
     })
     .catch(function() {
       element.insertAdjacentHTML("beforeend", ` <h4>No trip plans available</h4>`);
+    })
+  }
+
+  checkIfExists(element, info){
+    return fetch(`https://api.winnipegtransit.com/v3/locations.json?lat=${info.lat}&lon=${info.lon}&api-key=${this.busKey}`)
+    .then(response => response.json())
+    .then((data) => {
+      if (data.locations.length > 0){
+        this.insertLocation(element, info);
+      }
     })
   }
 
